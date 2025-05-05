@@ -22,5 +22,11 @@ jobs:
       - name: Install dependencies
         run: uv sync -p 3.12
 
-      - name: Run tests
+      - name: Run pytest
         run: uv run pytest
+
+      - name: Run mypy
+        run: uv run mypy src
+
+      - name: format
+        run: uv run ruff format --check src

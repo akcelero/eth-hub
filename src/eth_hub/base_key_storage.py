@@ -34,9 +34,13 @@ class BaseKeyStore(ABC):
         pass
 
     @abstractmethod
-    def sign_message(self, key_id: UUID, signable_message: SignableMessage) -> SignatureInfo:
+    def sign_message(
+        self, key_id: UUID, signable_message: SignableMessage
+    ) -> SignatureInfo:
         pass
 
     @abstractmethod
-    def sign_transaction(self, key_id: UUID, transaction_data: dict[str, Any]) -> SignatureInfo:
+    def sign_transaction(
+        self, key_id: UUID, transaction_data: dict[str, Any]
+    ) -> SignatureInfo:
         pass
