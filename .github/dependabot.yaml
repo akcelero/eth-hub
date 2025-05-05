@@ -1,0 +1,19 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/.github/workflows/"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "[github-actions] "
+    reviewers:
+      - "akcelero"
+
+  - package-ecosystem: "uv"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "[uv] "
+    reviewers:
+      - "akcelero"

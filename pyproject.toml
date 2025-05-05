@@ -1,0 +1,20 @@
+[project]
+name = "eth-hub"
+version = "0.1.0"
+description = "Flexible Ethereum key management and signing library supporting local and external backends."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "akcelero", email = "akcelero@gmail.com" }
+]
+license = { file = "LICENSE" }
+keywords = ["ethereum", "signing", "vault", "key management", "crypto"]
+
+[project.urls]
+Homepage = "https://github.com/akcelero/eth-hub"
+Repository = "https://github.com/akcelero/eth-hub"
+Issues = "https://github.com/akcelero/eth-hub/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
