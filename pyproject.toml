@@ -9,6 +9,10 @@ authors = [
 ]
 license = { file = "LICENSE" }
 keywords = ["ethereum", "signing", "vault", "key management", "crypto"]
+dependencies = [
+    "eth-account>=0.13.7",
+    "pydantic>=2.11.4",
+]
 
 [project.urls]
 Homepage = "https://github.com/akcelero/eth-hub"
