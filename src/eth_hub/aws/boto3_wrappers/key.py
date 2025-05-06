@@ -7,12 +7,26 @@ from cryptography.hazmat.primitives.asymmetric import ec, padding
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
 from mypy_boto3_kms import KMSClient
-from mypy_boto3_kms.literals import DataKeyPairSpecType, AlgorithmSpecType, WrappingKeySpecType
+from mypy_boto3_kms.literals import (
+    DataKeyPairSpecType,
+    AlgorithmSpecType,
+    WrappingKeySpecType,
+)
 from pydantic import SecretBytes
 
-from eth_hub.aws.boto3_wrappers.dto import CreateKeyItemResponse, GetPublicKeyResponse, ListKeysPage, \
-    ScheduleDeletionResponse
-from eth_hub.aws.boto3_wrappers.exceptions import CantCreateKeyObjectAwsError, CantImportKeyMaterialAwsError, CantGetAddressAwsError, CantDeleteKeyAwsError, CantListKeysAwsError
+from eth_hub.aws.boto3_wrappers.dto import (
+    CreateKeyItemResponse,
+    GetPublicKeyResponse,
+    ListKeysPage,
+    ScheduleDeletionResponse,
+)
+from eth_hub.aws.boto3_wrappers.exceptions import (
+    CantCreateKeyObjectAwsError,
+    CantImportKeyMaterialAwsError,
+    CantGetAddressAwsError,
+    CantDeleteKeyAwsError,
+    CantListKeysAwsError,
+)
 from eth_hub.aws.boto3_wrappers.utils import public_key_to_address
 
 
@@ -26,7 +40,7 @@ def create_key_item(client: KMSClient, create_key_by_aws: bool) -> UUID:
         response_raw = client.create_key(
             KeyUsage="SIGN_VERIFY",
             CustomerMasterKeySpec=CUSTOMER_MASTER_KEY_SPEC,
-            Origin="AWS_KMS" if create_key_by_aws else "EXTERNAL"
+            Origin="AWS_KMS" if create_key_by_aws else "EXTERNAL",
         )
     except ClientError as error:
         raise CantCreateKeyObjectAwsError(error)
@@ -36,9 +50,8 @@ def create_key_item(client: KMSClient, create_key_by_aws: bool) -> UUID:
 
 
 def fulfil_private_key(
-        client: KMSClient, key_id: UUID, private_key: SecretBytes
+    client: KMSClient, key_id: UUID, private_key: SecretBytes
 ) -> None:
-
     import_params = client.get_parameters_for_import(
         KeyId=str(key_id),
         WrappingAlgorithm=WRAPPING_ALGORITHM,
@@ -83,11 +96,12 @@ def get_address(client: KMSClient, key_id: UUID) -> bytes:
     return public_key_to_address(response.public_key)
 
 
-def schedule_key_deletion(client: KMSClient, key_id: UUID, days_period=7) -> datetime.datetime:
+def schedule_key_deletion(
+    client: KMSClient, key_id: UUID, days_period=7
+) -> datetime.datetime:
     try:
         response = client.schedule_key_deletion(
-            KeyId=str(key_id),
-            PendingWindowInDays=days_period
+            KeyId=str(key_id), PendingWindowInDays=days_period
         )
     except ClientError as error:
         raise CantDeleteKeyAwsError(error)
@@ -107,7 +121,9 @@ def _wrap_private_key(wrapping_public_key: bytes, private_key: SecretBytes) -> b
         encryption_algorithm=serialization.NoEncryption(),
     )
 
-    wrapping_public_key_der = serialization.load_der_public_key(wrapping_public_key, backend)
+    wrapping_public_key_der = serialization.load_der_public_key(
+        wrapping_public_key, backend
+    )
 
     if not isinstance(wrapping_public_key_der, RSAPublicKey):
         raise TypeError("Wrapping key must be an RSA public key.")

@@ -2,6 +2,7 @@ name: Run tests
 
 on:
   - pull_request
+  - workflow_dispatch
 
 jobs:
   run_test:
@@ -14,13 +15,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version-file: '.python-version'
 
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@v6
 
       - name: Install dependencies
-        run: uv sync -p 3.11
+        run: uv sync
 
       - name: Run pytest
         run: uv run pytest

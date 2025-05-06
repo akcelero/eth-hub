@@ -73,7 +73,7 @@ class ListKeysPage(Response):
 
 
 class CreateKeyItemResponse(Response):
-    key_metadata: KeyMetadata = Field(...,  alias="KeyMetadata")
+    key_metadata: KeyMetadata = Field(..., alias="KeyMetadata")
 
 
 class GetPublicKeyResponse(Response):

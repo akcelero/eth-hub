@@ -14,13 +14,31 @@ from typing_extensions import override
 from eth_hub.aws.boto3_wrappers.exceptions import BaseAwsError
 from eth_hub.signatureinfo import SignatureInfo
 from eth_hub.aws.boto3_wrappers.dto import KeyState
-from eth_hub.aws.boto3_wrappers.key import create_key_item, fulfil_private_key, get_address, \
-    get_key_ids, schedule_key_deletion
+from eth_hub.aws.boto3_wrappers.key import (
+    create_key_item,
+    fulfil_private_key,
+    get_address,
+    get_key_ids,
+    schedule_key_deletion,
+)
 from eth_hub.aws.boto3_wrappers.metadata import (
-    check_alias_already_taken, set_alias, get_aliases, get_key_metadata
+    check_alias_already_taken,
+    set_alias,
+    get_aliases,
+    get_key_metadata,
 )
 from eth_hub.aws.boto3_wrappers.signature import sign_message
-from eth_hub.aws.exceptions import AliasAlreadyTakenError, CantGetKeyInfoError, CantListKeysError, KeyNotFound, CantCreateKeyError, CantSetAlias, CantSignHash, CantRemoveKey, CantFindValidVError
+from eth_hub.aws.exceptions import (
+    AliasAlreadyTakenError,
+    CantGetKeyInfoError,
+    CantListKeysError,
+    KeyNotFound,
+    CantCreateKeyError,
+    CantSetAlias,
+    CantSignHash,
+    CantRemoveKey,
+    CantFindValidVError,
+)
 from eth_hub.aws.key import AwsKey
 from eth_hub.base_key_storage import BaseKeyStore
 
@@ -41,7 +59,7 @@ class AwsKeyStore(BaseKeyStore):
             fulfil_private_key(
                 client=self.boto3_client,
                 key_id=key_id,
-                private_key=SecretBytes(private_key)
+                private_key=SecretBytes(private_key),
             )
         except BaseAwsError as error:
             raise CantCreateKeyError(error)
@@ -76,27 +94,23 @@ class AwsKeyStore(BaseKeyStore):
             return [
                 key
                 for key_id in get_key_ids(client=self.boto3_client)
-                if (
-                    key := self._get_key(key_id, only_enabled)
-                )
+                if (key := self._get_key(key_id, only_enabled))
             ]
 
         except BaseAwsError as error:
             raise CantListKeysError(error)
 
-
     @override
     def remove_key(self, key_id: UUID) -> None:
         try:
-            schedule_key_deletion(
-                client=self.boto3_client,
-                key_id=key_id
-            )
+            schedule_key_deletion(client=self.boto3_client, key_id=key_id)
         except BaseAwsError as error:
             raise CantRemoveKey(error)
 
     @override
-    def sign_hash(self, key_id: UUID, hash_: bytes, chain_id: Optional[int] = None) -> SignatureInfo:
+    def sign_hash(
+        self, key_id: UUID, hash_: bytes, chain_id: Optional[int] = None
+    ) -> SignatureInfo:
         try:
             dsa_signature = sign_message(
                 client=self.boto3_client,
@@ -129,7 +143,9 @@ class AwsKeyStore(BaseKeyStore):
         return self.sign_hash(key_id, message_hash)
 
     @override
-    def sign_transaction(self, key_id: UUID, transaction_data: dict[str, Any]) -> SignatureInfo:
+    def sign_transaction(
+        self, key_id: UUID, transaction_data: dict[str, Any]
+    ) -> SignatureInfo:
         chain_id = transaction_data["chainId"]
 
         typed_tx = TypedTransaction.from_dict(transaction_data)
@@ -142,19 +158,14 @@ class AwsKeyStore(BaseKeyStore):
             if check_alias_already_taken(self.boto3_client, alias):
                 raise AliasAlreadyTakenError
 
-            set_alias(
-                client=self.boto3_client,
-                key_id=key_id,
-                alias=alias
-            )
+            set_alias(client=self.boto3_client, key_id=key_id, alias=alias)
         except BaseAwsError as error:
             raise CantSetAlias(error)
 
-    def _find_v(self, key_id: UUID, message_hash: bytes, r: int, s: int, chain_id: int) -> int:
-        address = get_address(
-            client=self.boto3_client,
-            key_id=key_id
-        )
+    def _find_v(
+        self, key_id: UUID, message_hash: bytes, r: int, s: int, chain_id: int
+    ) -> int:
+        address = get_address(client=self.boto3_client, key_id=key_id)
 
         for v in (0, 1):
             signature = keys.Signature(vrs=(v, r, s))
@@ -165,26 +176,12 @@ class AwsKeyStore(BaseKeyStore):
 
         raise CantFindValidVError
 
-
     def _get_key(self, key_id: UUID, only_enabled: bool) -> Optional[AwsKey]:
-        metadata = get_key_metadata(
-            client=self.boto3_client,
-            key_id=key_id
-        )
+        metadata = get_key_metadata(client=self.boto3_client, key_id=key_id)
 
         if only_enabled and metadata.key_state != KeyState.ENABLED:
             return None
 
-        aliases = get_aliases(
-            client=self.boto3_client,
-            key_id=key_id
-        )
-        address = get_address(
-            client=self.boto3_client,
-            key_id=key_id
-        )
-        return AwsKey(
-            id=metadata.key_id,
-            address=address.hex(),
-            aliases=aliases or []
-        )
+        aliases = get_aliases(client=self.boto3_client, key_id=key_id)
+        address = get_address(client=self.boto3_client, key_id=key_id)
+        return AwsKey(id=metadata.key_id, address=address.hex(), aliases=aliases or [])

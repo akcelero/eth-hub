@@ -2,8 +2,16 @@ from uuid import UUID
 
 from botocore.exceptions import ClientError
 
-from eth_hub.aws.boto3_wrappers.dto import ListAliasesPage, DescribeKeyResponse, KeyMetadata
-from eth_hub.aws.boto3_wrappers.exceptions import CantCreateKeyObjectAwsError, CantListAliasesAwsError, CantGetKeyInfoAwsError
+from eth_hub.aws.boto3_wrappers.dto import (
+    ListAliasesPage,
+    DescribeKeyResponse,
+    KeyMetadata,
+)
+from eth_hub.aws.boto3_wrappers.exceptions import (
+    CantCreateKeyObjectAwsError,
+    CantListAliasesAwsError,
+    CantGetKeyInfoAwsError,
+)
 from mypy_boto3_kms import KMSClient
 
 
@@ -14,7 +22,7 @@ def set_alias(client: KMSClient, key_id: UUID, alias: str) -> None:
             TargetKeyId=str(key_id),
         )
     except ClientError as exception:
-        raise CantCreateKeyObjectAwsError(exception) # from exception
+        raise CantCreateKeyObjectAwsError(exception)  # from exception
 
 
 def get_aliases(client: KMSClient, key_id: UUID) -> list[str]:
