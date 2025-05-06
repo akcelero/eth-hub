@@ -8,8 +8,8 @@ on:
         required: true
         type: choice
         options:
-          - 'TEST'
-          - 'MAIN'
+          - 'test.pypi'
+          - 'pypi'
 
 jobs:
   release:

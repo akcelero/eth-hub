@@ -1,13 +1,13 @@
 [project]
 name = "eth-hub"
-version = "0.1.1"
+version = "0.1.2"
 description = "Flexible Ethereum key management and signing library supporting local and external backends."
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [
     { name = "akcelero", email = "akcelero@gmail.com" }
 ]
-license = { file = "LICENSE" }
+license = "MIT"
 keywords = ["ethereum", "signing", "vault", "key management", "crypto"]
 dependencies = [
     "boto3-stubs[kms]>=1.38.9",
@@ -19,6 +19,20 @@ dependencies = [
     "mypy-boto3-kms>=1.38.0",
     "pydantic>=2.11.4",
     "asn1crypto>=1.5.1",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+
+    "License :: OSI Approved :: MIT License",
+
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
 ]
 
 [project.urls]
