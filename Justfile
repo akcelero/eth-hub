@@ -1,5 +1,8 @@
-install_pre_commit_hooks:
+install-pre-commit-hooks:
 	pre-commit install -c .github/pre-commit-config.yaml
 
-update_pre_commit_hooks:
+update-pre-commit-hooks:
 	pre-commit autoupdate -c .github/pre-commit-config.yaml
+
+install-editable:
+    uv pip install -e .
