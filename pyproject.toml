@@ -1,6 +1,6 @@
 [project]
 name = "eth-hub"
-version = "0.1.0"
+version = "0.1.1"
 description = "Flexible Ethereum key management and signing library supporting local and external backends."
 readme = "README.md"
 requires-python = ">=3.11"
