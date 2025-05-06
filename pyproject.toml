@@ -41,3 +41,13 @@ dev-dependencies = [
 [[tool.mypy.overrides]]
 module = "rlp"
 ignore_missing_imports = true
+
+[[tool.uv.index]]
+name = "test-pypi"
+url = "https://test.pypi.org/simple/"
+explicit = true
+
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple/"
+explicit = true
