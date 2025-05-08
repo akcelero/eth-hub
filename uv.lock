@@ -105,16 +105,16 @@ kms = [
 
 [[package]]
 name = "botocore"
-version = "1.38.9"
+version = "1.38.12"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "jmespath" },
     { name = "python-dateutil" },
     { name = "urllib3" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/27/7f/8d376fe976f352875a670811de9cef7a6212c2bc8019a4aa9c284cfc1d06/botocore-1.38.9.tar.gz", hash = "sha256:53113040882192388e05edebee48d45c008fb4ba2739dc889ce09b2adc9e56e4", size = 13877998, upload-time = "2025-05-05T19:31:22.476Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/41/5a/37274d8510d4ad86bc8349e716d62c6b95c20e48403de3b34bc53cd7708c/botocore-1.38.12.tar.gz", hash = "sha256:86c459de3e39b418f4eb81e88c23fba02995496141db73816e7f65cb8b04408b", size = 13883975, upload-time = "2025-05-08T19:27:53.822Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/09/39/a390efe23b6e3db08eda6082e4624f7b1b0aab139ad8520b98dc03e154d1/botocore-1.38.9-py3-none-any.whl", hash = "sha256:2d954d3d9a6c7f86fbfbeb164223996c24b7b7726682bace61f86a7e10b531e6", size = 13537742, upload-time = "2025-05-05T19:31:17.03Z" },
+    { url = "https://files.pythonhosted.org/packages/a5/6c/0d519204c2d7fe715f589878cacc3bc5265ddcff10a2bd95f159419b9ebd/botocore-1.38.12-py3-none-any.whl", hash = "sha256:bcea44f3fe3a5bc18030656b8d32013d8b2d76b54433f591500a14bcac2e94ee", size = 13544024, upload-time = "2025-05-08T19:27:48.228Z" },
 ]
 
 [[package]]
@@ -364,7 +364,7 @@ wheels = [
 
 [[package]]
 name = "eth-hub"
-version = "0.1.0"
+version = "0.1.2"
 source = { editable = "." }
 dependencies = [
     { name = "asn1crypto" },
