@@ -7,7 +7,7 @@ from mypy_boto3_kms import KMSClient
 from pydantic import SecretBytes
 from typing_extensions import override
 
-from eth_hub.aws.boto3_wrappers.dto import KeyState
+from eth_hub.aws.boto3_wrappers.dto import KeySpec
 from eth_hub.aws.boto3_wrappers.exceptions import BaseAwsError
 from eth_hub.aws.boto3_wrappers.key import (
     create_key_item,
@@ -39,6 +39,7 @@ from eth_hub.base_key_storage import BaseKeyStore
 from eth_hub.signatureinfo import SignatureInfo
 
 SECP256K1_ORDER = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
+KEY_SPEC = KeySpec.ECC_SECG_P256K1
 
 
 class AwsKeyStore(BaseKeyStore):
@@ -148,7 +149,7 @@ class AwsKeyStore(BaseKeyStore):
     def _get_key(self, key_id: UUID, only_enabled: bool) -> Optional[AwsKey]:
         metadata = get_key_metadata(client=self.boto3_client, key_id=key_id)
 
-        if only_enabled and metadata.key_state != KeyState.ENABLED:
+        if (only_enabled and not metadata.enabled) or metadata.key_spec != KEY_SPEC:
             return None
 
         aliases = get_aliases(client=self.boto3_client, key_id=key_id)
