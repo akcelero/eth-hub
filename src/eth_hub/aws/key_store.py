@@ -1,19 +1,14 @@
-from typing import Optional, Any
+from typing import Optional
 from uuid import UUID
 
 import boto3
-import rlp
-from eth_account.messages import SignableMessage
-from eth_account.typed_transactions import TypedTransaction
 from eth_keys import keys
-from eth_utils import keccak
 from mypy_boto3_kms import KMSClient
 from pydantic import SecretBytes
 from typing_extensions import override
 
-from eth_hub.aws.boto3_wrappers.exceptions import BaseAwsError
-from eth_hub.signatureinfo import SignatureInfo
 from eth_hub.aws.boto3_wrappers.dto import KeyState
+from eth_hub.aws.boto3_wrappers.exceptions import BaseAwsError
 from eth_hub.aws.boto3_wrappers.key import (
     create_key_item,
     fulfil_private_key,
@@ -23,24 +18,25 @@ from eth_hub.aws.boto3_wrappers.key import (
 )
 from eth_hub.aws.boto3_wrappers.metadata import (
     check_alias_already_taken,
-    set_alias,
     get_aliases,
     get_key_metadata,
+    set_alias,
 )
 from eth_hub.aws.boto3_wrappers.signature import sign_message
 from eth_hub.aws.exceptions import (
     AliasAlreadyTakenError,
+    CantCreateKeyError,
+    CantFindValidVError,
     CantGetKeyInfoError,
     CantListKeysError,
-    KeyNotFound,
-    CantCreateKeyError,
+    CantRemoveKey,
     CantSetAlias,
     CantSignHash,
-    CantRemoveKey,
-    CantFindValidVError,
+    KeyNotFound,
 )
 from eth_hub.aws.key import AwsKey
 from eth_hub.base_key_storage import BaseKeyStore
+from eth_hub.signatureinfo import SignatureInfo
 
 SECP256K1_ORDER = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
 
@@ -108,9 +104,7 @@ class AwsKeyStore(BaseKeyStore):
             raise CantRemoveKey(error)
 
     @override
-    def sign_hash(
-        self, key_id: UUID, hash_: bytes, chain_id: Optional[int] = None
-    ) -> SignatureInfo:
+    def sign_hash(self, key_id: UUID, hash_: bytes) -> SignatureInfo:
         try:
             dsa_signature = sign_message(
                 client=self.boto3_client,
@@ -120,38 +114,15 @@ class AwsKeyStore(BaseKeyStore):
         except BaseAwsError as error:
             raise CantSignHash(error)
 
-        r = dsa_signature["r"].native
-        s = dsa_signature["s"].native
+        r: int = dsa_signature["r"].native  # type: ignore
+        s: int = dsa_signature["s"].native  # type: ignore
 
         if s > SECP256K1_ORDER // 2:
             s = SECP256K1_ORDER - s
 
-        v = self._find_v(key_id, hash_, r, s, chain_id or 1)
+        v = self._find_v(key_id, hash_, r, s)
 
-        return SignatureInfo(
-            key_id=key_id,
-            hash=hash_,
-            v=v,
-            r=f"0x{r:064x}",
-            s=f"0x{s:064x}",
-        )
-
-    @override
-    def sign_message(self, key_id: UUID, message: SignableMessage) -> SignatureInfo:
-        eth_message_bytes = message.version + message.header + message.body
-        message_hash = keccak(eth_message_bytes)
-        return self.sign_hash(key_id, message_hash)
-
-    @override
-    def sign_transaction(
-        self, key_id: UUID, transaction_data: dict[str, Any]
-    ) -> SignatureInfo:
-        chain_id = transaction_data["chainId"]
-
-        typed_tx = TypedTransaction.from_dict(transaction_data)
-        encoded_tx = rlp.encode(typed_tx)
-        tx_hash = keccak(encoded_tx)
-        return self.sign_hash(key_id, tx_hash, chain_id)
+        return SignatureInfo(key_id=key_id, hash=hash_, v=v, r=r, s=s)
 
     def set_alias(self, key_id: UUID, alias: str) -> None:
         try:
@@ -162,9 +133,7 @@ class AwsKeyStore(BaseKeyStore):
         except BaseAwsError as error:
             raise CantSetAlias(error)
 
-    def _find_v(
-        self, key_id: UUID, message_hash: bytes, r: int, s: int, chain_id: int
-    ) -> int:
+    def _find_v(self, key_id: UUID, message_hash: bytes, r: int, s: int) -> int:
         address = get_address(client=self.boto3_client, key_id=key_id)
 
         for v in (0, 1):
@@ -172,7 +141,7 @@ class AwsKeyStore(BaseKeyStore):
             recovered_address = signature.recover_public_key_from_msg_hash(message_hash)
 
             if recovered_address.to_canonical_address() == address:
-                return v + (27 if chain_id == 1 else 35 + chain_id * 2)
+                return v
 
         raise CantFindValidVError
 
@@ -184,4 +153,4 @@ class AwsKeyStore(BaseKeyStore):
 
         aliases = get_aliases(client=self.boto3_client, key_id=key_id)
         address = get_address(client=self.boto3_client, key_id=key_id)
-        return AwsKey(id=metadata.key_id, address=address.hex(), aliases=aliases or [])
+        return AwsKey(id=metadata.key_id, address=address, aliases=aliases or [])

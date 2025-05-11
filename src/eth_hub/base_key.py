@@ -5,4 +5,4 @@ from pydantic import BaseModel
 
 class BaseKey(BaseModel):
     id: UUID
-    address: str
+    address: bytes

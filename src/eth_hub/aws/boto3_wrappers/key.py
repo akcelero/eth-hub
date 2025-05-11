@@ -3,13 +3,13 @@ from uuid import UUID
 
 from botocore.exceptions import ClientError
 from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives.asymmetric import ec, padding
 from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import ec, padding
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
 from mypy_boto3_kms import KMSClient
 from mypy_boto3_kms.literals import (
-    DataKeyPairSpecType,
     AlgorithmSpecType,
+    DataKeyPairSpecType,
     WrappingKeySpecType,
 )
 from pydantic import SecretBytes
@@ -22,13 +22,12 @@ from eth_hub.aws.boto3_wrappers.dto import (
 )
 from eth_hub.aws.boto3_wrappers.exceptions import (
     CantCreateKeyObjectAwsError,
-    CantImportKeyMaterialAwsError,
-    CantGetAddressAwsError,
     CantDeleteKeyAwsError,
+    CantGetAddressAwsError,
+    CantImportKeyMaterialAwsError,
     CantListKeysAwsError,
 )
 from eth_hub.aws.boto3_wrappers.utils import public_key_to_address
-
 
 CUSTOMER_MASTER_KEY_SPEC: DataKeyPairSpecType = "ECC_SECG_P256K1"
 WRAPPING_ALGORITHM: AlgorithmSpecType = "RSAES_OAEP_SHA_256"

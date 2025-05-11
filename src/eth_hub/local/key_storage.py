@@ -1,16 +1,13 @@
-from typing import Any
-from typing_extensions import override
-from uuid import uuid4, UUID
+from uuid import UUID, uuid4
 
 from eth_account import Account
-from eth_account.datastructures import SignedMessage
-from eth_account.messages import SignableMessage
 from eth_account.signers.local import LocalAccount
 from eth_typing import Hash32
+from typing_extensions import override
 
-from eth_hub.signatureinfo import SignatureInfo
 from eth_hub.base_key_storage import BaseKeyStore
 from eth_hub.local.key import LocalKey
+from eth_hub.signatureinfo import SignatureInfo
 
 
 class LocalKeyStorage(BaseKeyStore):
@@ -30,61 +27,39 @@ class LocalKeyStorage(BaseKeyStore):
     @override
     def get_key(self, key_id: UUID) -> LocalKey:
         account: LocalAccount = self._accounts[key_id]
-        return LocalKey(id=key_id, address=account.address)
+        address = self._get_bytes_address(account.address)
+        return LocalKey(id=key_id, address=address)
 
     @override
     def list_keys(self) -> list[LocalKey]:
         return [
-            LocalKey(id=key_id, address=account.address)
+            LocalKey(id=key_id, address=self._get_bytes_address(account.address))
             for key_id, account in self._accounts.items()
         ]
 
     @override
-    def remove_key(self, uuid: UUID) -> None:
-        self._accounts.pop(uuid)
+    def remove_key(self, key_id: UUID) -> None:
+        self._accounts.pop(key_id)
 
     @override
     def sign_hash(self, key_id: UUID, hash_: bytes) -> SignatureInfo:
         account: LocalAccount = self._accounts[key_id]
         hash32: Hash32 = Hash32(hash_)
         signed_message = account.unsafe_sign_hash(hash32)
-        return self._get_signature_info(key_id, signed_message)
-
-    @override
-    def sign_message(
-        self, key_id: UUID, signable_message: SignableMessage
-    ) -> SignatureInfo:
-        account: LocalAccount = self._accounts[key_id]
-        signed_message = account.sign_message(signable_message)
-        return self._get_signature_info(key_id, signed_message)
-
-    @override
-    def sign_transaction(
-        self, key_id: UUID, transaction_data: dict[str, Any]
-    ) -> SignatureInfo:
-        account: LocalAccount = self._accounts[key_id]
-        signature = account.sign_transaction(transaction_data)
         return SignatureInfo(
             key_id=key_id,
-            hash=signature.hash,
-            v=signature.v,
-            r=f"0x{signature.r:064x}",
-            s=f"0x{signature.s:064x}",
+            hash=signed_message.message_hash,
+            v=signed_message.v,
+            r=signed_message.r,
+            s=signed_message.s,
         )
 
     def _add_account(self, account: LocalAccount) -> LocalKey:
         key_id: UUID = uuid4()
         self._accounts[key_id] = account
+        address = bytes.fromhex(account.address.removeprefix("0x"))
 
-        return LocalKey(id=key_id, address=account.address)
+        return LocalKey(id=key_id, address=address)
 
-    def _get_signature_info(
-        self, key_id: UUID, signed_message: SignedMessage
-    ) -> SignatureInfo:
-        return SignatureInfo(
-            key_id=key_id,
-            hash=signed_message.message_hash,
-            v=signed_message.v,
-            r=f"0x{signed_message.r:064x}",
-            s=f"0x{signed_message.s:064x}",
-        )
+    def _get_bytes_address(self, address: str) -> bytes:
+        return bytes.fromhex(address.removeprefix("0x"))

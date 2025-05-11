@@ -1,8 +1,8 @@
 from uuid import UUID
 
 from asn1crypto.algos import DSASignature  # type: ignore
-from mypy_boto3_kms import KMSClient
 from botocore.exceptions import ClientError
+from mypy_boto3_kms import KMSClient
 
 from eth_hub.aws.boto3_wrappers.dto import SignResponse
 from eth_hub.aws.boto3_wrappers.exceptions import CantSignMessage

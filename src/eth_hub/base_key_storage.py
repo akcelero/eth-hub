@@ -1,8 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Sequence, Any
+from typing import Sequence
 from uuid import UUID
-
-from eth_account.messages import SignableMessage
 
 from eth_hub.base_key import BaseKey
 from eth_hub.signatureinfo import SignatureInfo
@@ -31,16 +29,4 @@ class BaseKeyStore(ABC):
 
     @abstractmethod
     def sign_hash(self, key_id: UUID, hash_: bytes) -> SignatureInfo:
-        pass
-
-    @abstractmethod
-    def sign_message(
-        self, key_id: UUID, signable_message: SignableMessage
-    ) -> SignatureInfo:
-        pass
-
-    @abstractmethod
-    def sign_transaction(
-        self, key_id: UUID, transaction_data: dict[str, Any]
-    ) -> SignatureInfo:
         pass

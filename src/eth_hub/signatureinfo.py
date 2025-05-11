@@ -1,21 +1,19 @@
-from pydantic import BaseModel, UUID4, PositiveInt, Field
+from pydantic import UUID4, BaseModel, Field, NonNegativeInt
 
 
 class SignatureInfo(BaseModel):
     key_id: UUID4
     hash: bytes
-    v: PositiveInt = Field(..., ge=27, examples=[27])
-    r: str = Field(
+    v: NonNegativeInt = Field(..., ge=0, le=1)
+    r: NonNegativeInt = Field(
         ...,
-        max_length=66,
-        min_length=66,
-        json_schema_extra={"format": "hexadecimal"},
-        examples=[f"0x{0:0>64}"],
+        examples=[
+            "70104486010083990545032612337028745446547141775874126017519489994121216695741"
+        ],
     )
-    s: str = Field(
+    s: NonNegativeInt = Field(
         ...,
-        max_length=66,
-        min_length=66,
-        json_schema_extra={"format": "hexadecimal"},
-        examples=[f"0x{0:0>64}"],
+        examples=[
+            "43255222980758551805236299871263068442915545698769795282667456674396607541627"
+        ],
     )
