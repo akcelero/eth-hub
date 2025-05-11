@@ -364,7 +364,6 @@ wheels = [
 
 [[package]]
 name = "eth-hub"
-version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "asn1crypto" },

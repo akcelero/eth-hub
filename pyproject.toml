@@ -1,12 +1,10 @@
 [project]
 name = "eth-hub"
-version = "0.1.2"
+dynamic = ["version"]
 description = "Flexible Ethereum key management and signing library supporting local and external backends."
 readme = "README.md"
 requires-python = ">=3.11"
-authors = [
-    { name = "akcelero", email = "akcelero@gmail.com" }
-]
+authors = [{ name = "akcelero", email = "akcelero@gmail.com" }]
 license = "MIT"
 keywords = ["ethereum", "signing", "vault", "key management", "crypto"]
 dependencies = [
@@ -41,8 +39,15 @@ Repository = "https://github.com/akcelero/eth-hub"
 Issues = "https://github.com/akcelero/eth-hub/issues"
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "uv-dynamic-versioning"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "uv-dynamic-versioning"
+
+[[tool.mypy.overrides]]
+module = "rlp"
+ignore_missing_imports = true
 
 [tool.uv]
 dev-dependencies = [
@@ -51,10 +56,6 @@ dev-dependencies = [
     "pytest-mock>=3.14.0",
     "ruff>=0.11.8",
 ]
-
-[[tool.mypy.overrides]]
-module = "rlp"
-ignore_missing_imports = true
 
 [[tool.uv.index]]
 name = "test-pypi"
