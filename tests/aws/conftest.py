@@ -7,6 +7,7 @@ from mypy_boto3_kms import KMSClient
 from pytest_mock import MockerFixture
 
 from eth_hub.aws.key_store import AwsKeyStore
+
 from .aws_mock import AwsMock, Key
 
 
@@ -29,8 +30,7 @@ def aws_mock(mocker: MockerFixture) -> AwsMock:
 def mocked_key() -> Key:
     return Key(
         id=uuid4(),
-        aliases=[],
-        account=Account.create(),
+        address=Account.create().address,
     )
 
 

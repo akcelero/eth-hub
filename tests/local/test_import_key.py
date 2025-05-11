@@ -13,4 +13,4 @@ def test_create_key(private_key: str) -> None:
 
     # then
     assert key_info.id in local_signer._accounts
-    assert key_info.address == account.address
+    assert key_info.address == bytes.fromhex(account.address.removeprefix("0x"))
