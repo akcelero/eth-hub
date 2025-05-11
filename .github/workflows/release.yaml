@@ -1,13 +1,11 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - "v*.*.*"
+  release:
+    types: [published]
 
 jobs:
   release:
-    environment: pypi
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -31,5 +29,8 @@ jobs:
       - name: Build package
         run: uv build
 
-      - name: Publish package
-        run: uv publish --index ${{ vars.INDEX_NAME }}
+      - name: Publish to TestPyPI
+        run: uv publish --index test-pypi
+
+      - name: Publish to PyPI
+        run: uv publish --index pypi
