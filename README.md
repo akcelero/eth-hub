@@ -80,6 +80,53 @@ class BaseKeyStore(ABC):
 
 #### 3. HashiCorp Vaul - WiP
 
+## Installation
+```bash
+pip install eth-hub
+```
+
+## Aws usage case
+If you want to use your own key material, you can import it into AWS KMS. Otherwise, create a new KMS key for Ethereum signing.
+```Python
+web3_rpc = "..."
+web3 = Web3(Web3.HTTPProvider(web3_rpc))
+
+key_storage = AwsKeyStore(boto3.client("kms"))
+
+# import your private key to KMS
+key = key_storage.import_key(private_key="...")
+
+# or create new one by KMS:
+key = key_storage.create_key()
+```
+
+Sign and send transaction:
+```Python
+web3_rpc = "..."
+web3 = Web3(Web3.HTTPProvider(web3_rpc))
+
+key_id = "..."
+key_storage = AwsKeyStore(boto3.client("kms"))
+key = key_storage.get_key(key_id)
+user_address = Web3.to_checksum_address(key.address.hex())
+
+abi = [...]
+contract_address = Web3.to_checksum_address(contract_address)
+contract = web3.eth.contract(address=contract_address, abi=abi)
+nonce = web3.eth.get_transaction_count(user_address)
+transaction_dict = contract.functions.foo.build_transaction({"nonce": nonce})
+
+unsigned_transaction = TypedTransaction.from_dict(transaction_dict)
+signature = key_storage.sign_hash(key_id, unsigned_transaction.hash())
+
+signed_transaction = TypedTransaction.from_dict(
+    {**transaction_dict, "v": signature.v, "r": signature.r, "s": signature.s}
+)
+
+tx_hash = web3.eth.send_raw_transaction(encoded_tx.encode())
+```
+The private key never leaves AWS KMS. Signing is performed inside KMS, and only the signature is returned to your application.
+
 
 ## Planned Features:
 - Integration with HashiCorp Vault's
