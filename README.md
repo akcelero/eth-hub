@@ -5,6 +5,7 @@
 
 [![PyPI Version](https://img.shields.io/pypi/v/eth-hub.svg)](https://pypi.org/project/eth-hub/)
 ![PyPI - Status](https://img.shields.io/pypi/status/eth-hub)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/eth-hub)
 
 [![Python Versions](https://img.shields.io/pypi/pyversions/eth-hub.svg)](https://pypi.org/project/eth-hub/)
 [![License](https://img.shields.io/pypi/l/eth-hub.svg)](https://github.com/akcelero/eth-hub/blob/main/LICENSE)
