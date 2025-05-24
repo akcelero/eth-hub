@@ -8,14 +8,14 @@ authors = [{ name = "akcelero", email = "akcelero@gmail.com" }]
 license = "MIT"
 keywords = ["ethereum", "signing", "vault", "key management", "crypto"]
 dependencies = [
-    "boto3-stubs[kms]>=1.38.9",
-    "boto3>=1.38.9",
-    "botocore>=1.38.9",
-    "cryptography>=44.0.3",
+    "boto3-stubs[kms]>=1.38.23",
+    "boto3>=1.38.23",
+    "botocore>=1.38.23",
+    "cryptography>=45.0.2",
     "eth-account>=0.13.7",
     "eth-keys>=0.7.0",
     "mypy-boto3-kms>=1.38.0",
-    "pydantic>=2.11.4",
+    "pydantic>=2.11.5",
     "asn1crypto>=1.5.1",
 ]
 classifiers = [
@@ -33,6 +33,14 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
 ]
 
+[dependency-groups]
+dev = [
+    "mypy>=1.15.0",
+    "pytest>=8.3.5",
+    "pytest-mock>=3.14.0",
+    "ruff>=0.11.11",
+]
+
 [project.urls]
 Homepage = "https://github.com/akcelero/eth-hub"
 Repository = "https://github.com/akcelero/eth-hub"
@@ -48,14 +56,6 @@ source = "uv-dynamic-versioning"
 [[tool.mypy.overrides]]
 module = "rlp"
 ignore_missing_imports = true
-
-[tool.uv]
-dev-dependencies = [
-    "mypy>=1.15.0",
-    "pytest>=8.3.5",
-    "pytest-mock>=3.14.0",
-    "ruff>=0.11.8",
-]
 
 [[tool.uv.index]]
 name = "test-pypi"

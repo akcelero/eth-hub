@@ -5,15 +5,23 @@ updates:
     schedule:
       interval: "daily"
     commit-message:
-      prefix: "[github-actions] "
+      prefix: "📦 deps: "
     reviewers:
       - "akcelero"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
 
   - package-ecosystem: "uv"
     directory: "/"
     schedule:
       interval: "daily"
     commit-message:
-      prefix: "[uv] "
+      prefix: "📦 deps: "
     reviewers:
       - "akcelero"
+    groups:
+      uv:
+        patterns:
+          - "*"
