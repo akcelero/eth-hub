@@ -1,8 +1,9 @@
-import pytest
 from unittest.mock import Mock
 
+import pytest
 
-@pytest.fixture(scope="function")
+
+@pytest.fixture
 def signed_message_mock() -> Mock:
     mock = Mock()
     mock.message_hash = "mocked_hash"
@@ -13,7 +14,7 @@ def signed_message_mock() -> Mock:
     return mock
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def signed_tx_mock() -> Mock:
     mock = Mock()
     mock.hash = "mocked_hash"
@@ -24,7 +25,7 @@ def signed_tx_mock() -> Mock:
     return mock
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def account_mock(signed_message_mock: Mock, signed_tx_mock: Mock) -> Mock:
     mock = Mock()
     mock.sign_message.return_value = signed_message_mock

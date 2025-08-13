@@ -9,7 +9,6 @@ from .aws_mock import AwsMock, Key
 
 def test_sign_hash(
     key_manager: AwsKeyStore,
-    mocked_key: Key,
     aws_mock: AwsMock,
 ) -> None:
     # given
@@ -23,7 +22,7 @@ def test_sign_hash(
     aws_mock.dsa_signatures.append(DSASignature({"r": r, "s": s}))
 
     hash_ = bytes.fromhex(
-        "fdca2948a3f973fdfd6e0574a1980793d8fa2f157ab9866937029c7efc69aca2"
+        "fdca2948a3f973fdfd6e0574a1980793d8fa2f157ab9866937029c7efc69aca2",
     )
 
     # when

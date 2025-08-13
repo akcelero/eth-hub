@@ -35,6 +35,6 @@ def mocked_key() -> Key:
 
 
 @pytest.fixture
-def aws_mock_with_key(mocked_key: Key, aws_mock: AwsMock, client: KMSClient) -> AwsMock:
+def aws_mock_with_key(mocked_key: Key, aws_mock: AwsMock) -> AwsMock:
     aws_mock.keys[mocked_key.id] = mocked_key
     return aws_mock

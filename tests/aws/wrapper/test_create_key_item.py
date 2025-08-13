@@ -1,22 +1,20 @@
-import uuid
 import datetime
+import uuid
 
 import pytest
-
 from botocore.stub import Stubber
 from mypy_boto3_kms import KMSClient
 from pydantic import SecretBytes
 
-from eth_hub.aws.boto3_wrappers.dto import KeyState, KeySpec
+from eth_hub.aws.boto3_wrappers.dto import KeySpec, KeyState
+from eth_hub.aws.boto3_wrappers.exceptions import BaseAwsError
 from eth_hub.aws.boto3_wrappers.key import (
     create_key_item,
     fulfil_private_key,
-    get_key_ids,
     get_address,
-    schedule_key_deletion
+    get_key_ids,
+    schedule_key_deletion,
 )
-from eth_hub.aws.boto3_wrappers.exceptions import BaseAwsError
-
 
 WRAPPING_KEY = bytes.fromhex("""
 30820122300d06092a864886f70d01010105000382010f003082010a0282010100e4823c943c43a114fb77
@@ -45,9 +43,9 @@ def test_create_key_item(client: KMSClient, stubber: Stubber) -> None:
                 "CreationDate": datetime.datetime.now(datetime.UTC),
             },
             "ResponseMetadata": {
-                "HTTPStatusCode": 200
-            }
-        }
+                "HTTPStatusCode": 200,
+            },
+        },
     )
 
     # when
@@ -64,7 +62,7 @@ def test_create_key_item_error(client: KMSClient, stubber: Stubber) -> None:
         method="create_key",
         service_error_code="AccessDeniedException",
         service_message="You do not have sufficient permissions to perform this action.",
-        http_status_code=403
+        http_status_code=403,
     )
 
     # when / then
@@ -85,17 +83,17 @@ def test_fulfil_private_key(client: KMSClient, stubber: Stubber) -> None:
             "PublicKey": WRAPPING_KEY,
             "ParametersValidTo": "2025-02-04T14:30:00.000000",
             "ResponseMetadata": {
-                "HTTPStatusCode": 200
-            }
-        }
+                "HTTPStatusCode": 200,
+            },
+        },
     )
     stubber.add_response(
         method="import_key_material",
         service_response={
         "ResponseMetadata": {
-                "HTTPStatusCode": 200
-            }
-        }
+                "HTTPStatusCode": 200,
+            },
+        },
     )
 
     # when
@@ -116,15 +114,15 @@ def test_get_key_ids(client: KMSClient, stubber: Stubber) -> None:
             "Keys": [
                 {
                     "KeyId": str(key_id_1),
-                    "KeyArn": f"arn:aws:kms:eu-west-2:111111111111:key/{key_id_1}"
-                }
+                    "KeyArn": f"arn:aws:kms:eu-west-2:111111111111:key/{key_id_1}",
+                },
             ],
             "NextMarker": "next-marker-1",  # Correct pagination key for KMS
             "Truncated": True,
             "ResponseMetadata": {
-                "HTTPStatusCode": 200
-            }
-        }
+                "HTTPStatusCode": 200,
+            },
+        },
     )
     stubber.add_response(
         method="list_keys",
@@ -132,14 +130,14 @@ def test_get_key_ids(client: KMSClient, stubber: Stubber) -> None:
             "Keys": [
                 {
                     "KeyId": str(key_id_2),
-                    "KeyArn": f"arn:aws:kms:eu-west-2:111111111111:key/{key_id_2}"
-                }
+                    "KeyArn": f"arn:aws:kms:eu-west-2:111111111111:key/{key_id_2}",
+                },
             ],
             "Truncated": False,
             "ResponseMetadata": {
-                "HTTPStatusCode": 200
-            }
-        }
+                "HTTPStatusCode": 200,
+            },
+        },
     )
 
     # when
@@ -155,7 +153,7 @@ def test_get_address(client: KMSClient, stubber: Stubber) -> None:
     key_id = uuid.uuid4()
     public_key = bytes.fromhex(
         "3056301006072a8648ce3d020106052b8104000a034200042d3665dce3d34dfdbcc585ffdee7f7b245f01685"
-        "d228a3d1c04ea80805282c54bf66263c4c0d2a8c0bdb0ba0f888d1f9b4a8b14325d8b39492b684afcb16e1e6"
+        "d228a3d1c04ea80805282c54bf66263c4c0d2a8c0bdb0ba0f888d1f9b4a8b14325d8b39492b684afcb16e1e6",
     )
     address = "9c60ee98a12d30ca9eaccc9635a10864756a00d7"
 
@@ -164,9 +162,9 @@ def test_get_address(client: KMSClient, stubber: Stubber) -> None:
         service_response={
             "PublicKey": public_key,
             "ResponseMetadata": {
-                "HTTPStatusCode": 200
-            }
-        }
+                "HTTPStatusCode": 200,
+            },
+        },
     )
 
     # when
@@ -191,8 +189,8 @@ def test_schedule_key_deletion(client: KMSClient, stubber: Stubber) -> None:
             "PendingWindowInDays": 7,
             "ResponseMetadata": {
                 "HTTPStatusCode": 200,
-            }
-        }
+            },
+        },
     )
 
     # when

@@ -1,12 +1,10 @@
-from typing import Optional
-
 from botocore.exceptions import ClientError
 
 
 class BaseAwsError(Exception):
     message = "Base error"
 
-    def __init__(self, client_error: Optional[ClientError] = None) -> None:
+    def __init__(self, client_error: ClientError | None = None) -> None:
         if client_error is None:
             self.code = ""
 
@@ -45,5 +43,9 @@ class CantGetKeyInfoAwsError(BaseAwsError):
     message = "Can't get key info"
 
 
-class CantSignMessage(BaseAwsError):
+class CantSignMessageError(BaseAwsError):
     message = "Can't sign message"
+
+
+class NotRSAKeyError(BaseAwsError):
+    message = "Must be an RSA public key."

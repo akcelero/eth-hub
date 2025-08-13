@@ -1,8 +1,9 @@
 import pytest
 
 from eth_hub.aws.boto3_wrappers.exceptions import CantDeleteKeyAwsError
-from eth_hub.aws.exceptions import CantRemoveKey
+from eth_hub.aws.exceptions import CantRemoveKeyError
 from eth_hub.aws.key_store import AwsKeyStore
+
 from .aws_mock import AwsMock, Key
 
 
@@ -27,5 +28,5 @@ def test_remove_key_with_exception(
     aws_mock_with_key.schedule_key_deletion_mock.side_effect = CantDeleteKeyAwsError
 
     # when / then
-    with pytest.raises(CantRemoveKey):
+    with pytest.raises(CantRemoveKeyError):
         key_manager.remove_key(mocked_key.id)

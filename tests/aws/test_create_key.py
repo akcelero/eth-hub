@@ -3,6 +3,7 @@ import pytest
 from eth_hub.aws.boto3_wrappers.exceptions import CantCreateKeyObjectAwsError, CantImportKeyMaterialAwsError
 from eth_hub.aws.exceptions import CantCreateKeyError
 from eth_hub.aws.key_store import AwsKeyStore
+
 from .aws_mock import AwsMock
 
 

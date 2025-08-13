@@ -5,7 +5,7 @@ from botocore.exceptions import ClientError
 from mypy_boto3_kms import KMSClient
 
 from eth_hub.aws.boto3_wrappers.dto import SignResponse
-from eth_hub.aws.boto3_wrappers.exceptions import CantSignMessage
+from eth_hub.aws.boto3_wrappers.exceptions import CantSignMessageError
 
 
 def sign_message(client: KMSClient, key_id: UUID, message_hash: bytes) -> DSASignature:
@@ -17,7 +17,7 @@ def sign_message(client: KMSClient, key_id: UUID, message_hash: bytes) -> DSASig
             SigningAlgorithm="ECDSA_SHA_256",
         )
     except ClientError as error:
-        raise CantSignMessage(error)
+        raise CantSignMessageError(error)
 
     der_signature = SignResponse.model_validate(response).signature
     return DSASignature.load(der_signature)

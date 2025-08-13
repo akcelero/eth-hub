@@ -1,8 +1,9 @@
 import pytest
 
 from eth_hub.aws.boto3_wrappers.exceptions import CantCreateKeyObjectAwsError
-from eth_hub.aws.exceptions import CantSetAlias, AliasAlreadyTakenError
+from eth_hub.aws.exceptions import AliasAlreadyTakenError, CantSetAliasError
 from eth_hub.aws.key_store import AwsKeyStore
+
 from .aws_mock import AwsMock, Key
 
 
@@ -22,10 +23,10 @@ def test_set_alias(
     assert alias in aws_mock_with_key.keys[mocked_key.id].aliases
 
 
+@pytest.mark.usefixtures("aws_mock_with_key")
 def test_set_already_taken_alias(
         mocked_key: Key,
         key_manager: AwsKeyStore,
-        aws_mock_with_key: AwsMock,
 ) -> None:
     # given
     alias = "test"
@@ -46,5 +47,5 @@ def test_set_alias_with_exception(
     aws_mock_with_key.set_alias_mock.side_effect = CantCreateKeyObjectAwsError
 
     # when
-    with pytest.raises(CantSetAlias):
+    with pytest.raises(CantSetAliasError):
         key_manager.set_alias(mocked_key.id, alias)

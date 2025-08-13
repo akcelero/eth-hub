@@ -1,6 +1,5 @@
 import datetime
 from enum import StrEnum
-from typing import Optional
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -17,7 +16,7 @@ class Error(BaseModel):
 
 class Response(BaseModel):
     response_metadata: ResponseMetadata = Field(..., alias="ResponseMetadata")
-    error: Optional[Error] = Field(None, alias="Error")
+    error: Error | None = Field(None, alias="Error")
 
 
 class KeyState(StrEnum):

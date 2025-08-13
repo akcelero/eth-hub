@@ -1,5 +1,4 @@
 import datetime
-from typing import Optional
 from uuid import UUID, uuid4
 
 from asn1crypto.algos import DSASignature
@@ -20,7 +19,7 @@ class Key(BaseModel):
 
     id: UUID
     aliases: list[str] = []
-    address: Optional[str] = None
+    address: str | None = None
     key_state: KeyState = KeyState.ENABLED
     removal_scheduled: bool = False
     enabled: bool = True
@@ -32,37 +31,44 @@ class AwsMock:
         self.dsa_signatures: list[DSASignature] = []
 
         self.create_key_item_mock = mocker.patch(
-            "eth_hub.aws.key_store.create_key_item", side_effect=self.create_key_item
+            "eth_hub.aws.key_store.create_key_item",
+            side_effect=self.create_key_item,
         )
         self.fulfil_private_key_mock = mocker.patch(
             "eth_hub.aws.key_store.fulfil_private_key",
             side_effect=self.fulfil_private_key,
         )
         self.get_key_ids_mock = mocker.patch(
-            "eth_hub.aws.key_store.get_key_ids", side_effect=self.get_key_ids
+            "eth_hub.aws.key_store.get_key_ids",
+            side_effect=self.get_key_ids,
         )
         self.get_address_mock = mocker.patch(
-            "eth_hub.aws.key_store.get_address", side_effect=self.get_address
+            "eth_hub.aws.key_store.get_address",
+            side_effect=self.get_address,
         )
         self.schedule_key_deletion_mock = mocker.patch(
             "eth_hub.aws.key_store.schedule_key_deletion",
             side_effect=self.schedule_key_deletion,
         )
         self.set_alias_mock = mocker.patch(
-            "eth_hub.aws.key_store.set_alias", side_effect=self.set_alias
+            "eth_hub.aws.key_store.set_alias",
+            side_effect=self.set_alias,
         )
         self.get_aliases_mock = mocker.patch(
-            "eth_hub.aws.key_store.get_aliases", side_effect=self.get_aliases
+            "eth_hub.aws.key_store.get_aliases",
+            side_effect=self.get_aliases,
         )
         self.check_alias_already_taken_mock = mocker.patch(
             "eth_hub.aws.key_store.check_alias_already_taken",
             side_effect=self.check_alias_already_taken,
         )
         self.get_key_metadata_mock = mocker.patch(
-            "eth_hub.aws.key_store.get_key_metadata", side_effect=self.get_key_metadata
+            "eth_hub.aws.key_store.get_key_metadata",
+            side_effect=self.get_key_metadata,
         )
         self.sign_message_mock = mocker.patch(
-            "eth_hub.aws.key_store.sign_message", side_effect=self.sign_message
+            "eth_hub.aws.key_store.sign_message",
+            side_effect=self.sign_message,
         )
 
     def create_key_item(self, client: KMSClient, create_key_by_aws: bool) -> UUID:
@@ -74,10 +80,13 @@ class AwsMock:
         return key_id
 
     def fulfil_private_key(
-        self, client: KMSClient, key_id: UUID, private_key: SecretBytes
+        self,
+        client: KMSClient,
+        key_id: UUID,
+        private_key: SecretBytes,
     ) -> None:
         self.keys[key_id].address = Account.from_key(
-            private_key.get_secret_value()
+            private_key.get_secret_value(),
         ).address
 
     def get_key_ids(self, client: KMSClient) -> list[UUID]:
@@ -90,11 +99,14 @@ class AwsMock:
         raise CantGetAddressAwsError()
 
     def schedule_key_deletion(
-        self, client: KMSClient, key_id: UUID, days_period=7
+        self,
+        client: KMSClient,
+        key_id: UUID,
+        days_period=7,
     ) -> datetime.datetime:
         self.keys[key_id].removal_scheduled = True
         return datetime.datetime.now(datetime.UTC) + datetime.timedelta(
-            days=days_period
+            days=days_period,
         )
 
     def set_alias(self, client: KMSClient, key_id: UUID, alias: str) -> None:
@@ -119,6 +131,9 @@ class AwsMock:
         )
 
     def sign_message(
-        self, client: KMSClient, key_id: UUID, message_hash: bytes
+        self,
+        client: KMSClient,
+        key_id: UUID,
+        message_hash: bytes,
     ) -> DSASignature:
         return self.dsa_signatures.pop()

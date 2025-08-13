@@ -26,6 +26,7 @@ from eth_hub.aws.boto3_wrappers.exceptions import (
     CantGetAddressAwsError,
     CantImportKeyMaterialAwsError,
     CantListKeysAwsError,
+    NotRSAKeyError,
 )
 from eth_hub.aws.boto3_wrappers.utils import public_key_to_address
 
@@ -49,7 +50,9 @@ def create_key_item(client: KMSClient, create_key_by_aws: bool) -> UUID:
 
 
 def fulfil_private_key(
-    client: KMSClient, key_id: UUID, private_key: SecretBytes
+    client: KMSClient,
+    key_id: UUID,
+    private_key: SecretBytes,
 ) -> None:
     import_params = client.get_parameters_for_import(
         KeyId=str(key_id),
@@ -76,11 +79,7 @@ def fulfil_private_key(
 def get_key_ids(client: KMSClient) -> list[UUID]:
     try:
         paginator = client.get_paginator("list_keys")
-        return [
-            key.key_id
-            for page in paginator.paginate()
-            for key in ListKeysPage.model_validate(page).keys
-        ]
+        return [key.key_id for page in paginator.paginate() for key in ListKeysPage.model_validate(page).keys]
     except ClientError as error:
         raise CantListKeysAwsError(error)
 
@@ -96,11 +95,14 @@ def get_address(client: KMSClient, key_id: UUID) -> bytes:
 
 
 def schedule_key_deletion(
-    client: KMSClient, key_id: UUID, days_period=7
+    client: KMSClient,
+    key_id: UUID,
+    days_period=7,
 ) -> datetime.datetime:
     try:
         response = client.schedule_key_deletion(
-            KeyId=str(key_id), PendingWindowInDays=days_period
+            KeyId=str(key_id),
+            PendingWindowInDays=days_period,
         )
     except ClientError as error:
         raise CantDeleteKeyAwsError(error)
@@ -121,11 +123,12 @@ def _wrap_private_key(wrapping_public_key: bytes, private_key: SecretBytes) -> b
     )
 
     wrapping_public_key_der = serialization.load_der_public_key(
-        wrapping_public_key, backend
+        wrapping_public_key,
+        backend,
     )
 
     if not isinstance(wrapping_public_key_der, RSAPublicKey):
-        raise TypeError("Wrapping key must be an RSA public key.")
+        raise NotRSAKeyError()
 
     return wrapping_public_key_der.encrypt(
         der_private_key,

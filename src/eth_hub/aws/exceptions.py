@@ -9,7 +9,7 @@ class AliasAlreadyTakenError(BaseError):
     pass
 
 
-class KeyNotFound(BaseError):
+class KeyNotFoundError(BaseError):
     pass
 
 
@@ -37,13 +37,13 @@ class CantCreateKeyError(BaseFromAwsError):
     message = "Can't create key"
 
 
-class CantSetAlias(BaseFromAwsError):
+class CantSetAliasError(BaseFromAwsError):
     message = "Can't set alias"
 
 
-class CantSignHash(BaseFromAwsError):
+class CantSignHashError(BaseFromAwsError):
     message = "Can't sign hash"
 
 
-class CantRemoveKey(BaseFromAwsError):
+class CantRemoveKeyError(BaseFromAwsError):
     message = "Can't remove key"

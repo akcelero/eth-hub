@@ -1,9 +1,14 @@
 import pytest
 
-from eth_hub.aws.boto3_wrappers.exceptions import CantCreateKeyObjectAwsError, CantListAliasesAwsError, \
-    CantGetAddressAwsError, CantListKeysAwsError
+from eth_hub.aws.boto3_wrappers.exceptions import (
+    CantCreateKeyObjectAwsError,
+    CantGetAddressAwsError,
+    CantListAliasesAwsError,
+    CantListKeysAwsError,
+)
 from eth_hub.aws.exceptions import CantGetKeyInfoError, CantListKeysError
 from eth_hub.aws.key_store import AwsKeyStore
+
 from .aws_mock import AwsMock, Key
 
 

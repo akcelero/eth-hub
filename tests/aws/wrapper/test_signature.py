@@ -1,19 +1,22 @@
 import uuid
 
 from botocore.stub import Stubber
-from mypy_boto3_kms import KMSClient
 from eth_hash.auto import keccak
+from mypy_boto3_kms import KMSClient
 
 from eth_hub.aws.boto3_wrappers.signature import sign_message
+
 
 def test_set_alias(client: KMSClient, stubber: Stubber) -> None:
     # given
     key_id = uuid.uuid4()
     signature = bytes.fromhex(
         "3046022100eb6c5e5503afdb89e0580c3aa25069323d8a050a707be5b08d115c084bd9cb"
-        "1a022100a64ba0a49b3ac89eb67ef01fc1c1348bb46ae0b9caa06964b723ac426535f818"
+        "1a022100a64ba0a49b3ac89eb67ef01fc1c1348bb46ae0b9caa06964b723ac426535f818",
     )
     msg_hash = keccak(b"test value")
+    expected_r = 0xeb6c5e5503afdb89e0580c3aa25069323d8a050a707be5b08d115c084bd9cb1a
+    expected_s = 0xa64ba0a49b3ac89eb67ef01fc1c1348bb46ae0b9caa06964b723ac426535f818
 
     stubber.add_response(
         method="sign",
@@ -22,9 +25,9 @@ def test_set_alias(client: KMSClient, stubber: Stubber) -> None:
             "Signature": signature,
             "SigningAlgorithm": "ECDSA_SHA_256",
             "ResponseMetadata": {
-                "HTTPStatusCode": 200
-            }
-        }
+                "HTTPStatusCode": 200,
+            },
+        },
     )
 
     # when
@@ -32,5 +35,5 @@ def test_set_alias(client: KMSClient, stubber: Stubber) -> None:
 
     # then
     stubber.assert_no_pending_responses()
-    assert signature_received["r"].native == 0xeb6c5e5503afdb89e0580c3aa25069323d8a050a707be5b08d115c084bd9cb1a
-    assert signature_received["s"].native == 0xa64ba0a49b3ac89eb67ef01fc1c1348bb46ae0b9caa06964b723ac426535f818
+    assert signature_received["r"].native == expected_r
+    assert signature_received["s"].native == expected_s

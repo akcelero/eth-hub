@@ -9,4 +9,4 @@ def test_create_key() -> None:
     key_info = local_signer.create_key()
 
     # then
-    assert key_info.id in local_signer._accounts
+    assert key_info.id in local_signer._accounts  # noqa: SLF001

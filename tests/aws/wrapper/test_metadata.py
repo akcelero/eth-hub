@@ -4,9 +4,8 @@ import uuid
 from botocore.stub import Stubber
 from mypy_boto3_kms import KMSClient
 
-from eth_hub.aws.boto3_wrappers.dto import KeyState, KeySpec
-from eth_hub.aws.boto3_wrappers.metadata import set_alias, check_alias_already_taken, \
-    get_key_metadata, get_aliases
+from eth_hub.aws.boto3_wrappers.dto import KeySpec, KeyState
+from eth_hub.aws.boto3_wrappers.metadata import check_alias_already_taken, get_aliases, get_key_metadata, set_alias
 
 
 def test_set_alias(client: KMSClient, stubber: Stubber) -> None:
@@ -17,9 +16,9 @@ def test_set_alias(client: KMSClient, stubber: Stubber) -> None:
         method="create_alias",
         service_response={
             "ResponseMetadata": {
-                "HTTPStatusCode": 200
-            }
-        }
+                "HTTPStatusCode": 200,
+            },
+        },
     )
 
     # when
@@ -45,12 +44,12 @@ def test_get_aliases(client: KMSClient, stubber: Stubber) -> None:
                 }, {
                     "AliasName": f"alias/{alias2}",
                     "TargetKeyId": str(key_id),
-                }
+                },
             ],
             "ResponseMetadata": {
-                "HTTPStatusCode": 200
-            }
-        }
+                "HTTPStatusCode": 200,
+            },
+        },
     )
 
     # when
@@ -77,12 +76,12 @@ def test_check_alias_already_taken(client: KMSClient, stubber: Stubber) -> None:
                 }, {
                     "AliasName": f"alias/{alias2}",
                     "TargetKeyId": str(key_id),
-                }
+                },
             ],
             "ResponseMetadata": {
-                "HTTPStatusCode": 200
-            }
-        }
+                "HTTPStatusCode": 200,
+            },
+        },
     )
 
     # when
@@ -113,9 +112,9 @@ def test_get_key_metadata(client: KMSClient, stubber: Stubber) -> None:
                 "CreationDate": creation_date,
             },
             "ResponseMetadata": {
-                "HTTPStatusCode": 200
-            }
-        }
+                "HTTPStatusCode": 200,
+            },
+        },
     )
 
     # when
