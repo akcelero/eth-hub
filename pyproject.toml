@@ -19,7 +19,7 @@ dependencies = [
     "asn1crypto~=1.5.1",
 ]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
 
     "Intended Audience :: Developers",
     "Intended Audience :: System Administrators",
