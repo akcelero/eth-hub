@@ -47,11 +47,14 @@ Repository = "https://github.com/akcelero/eth-hub"
 Issues = "https://github.com/akcelero/eth-hub/issues"
 
 [build-system]
-requires = ["uv-dynamic-versioning"]
+requires = ["hatchling", "uv-dynamic-versioning"]
 build-backend = "hatchling.build"
 
 [tool.hatch.version]
 source = "uv-dynamic-versioning"
+
+[tool.uv-dynamic-versioning]
+fallback-version = "0.0.0"
 
 [[tool.mypy.overrides]]
 module = "rlp"
