@@ -47,7 +47,7 @@ Repository = "https://github.com/akcelero/eth-hub"
 Issues = "https://github.com/akcelero/eth-hub/issues"
 
 [build-system]
-requires = ["hatchling", "uv-dynamic-versioning"]
+requires = ["uv-dynamic-versioning"]
 build-backend = "hatchling.build"
 
 [tool.hatch.version]
@@ -68,3 +68,9 @@ name = "pypi"
 url = "https://pypi.org/simple/"
 publish-url = "https://upload.pypi.org/legacy/"
 explicit = true
+
+[tool.ruff.lint]
+select = ["E", "F", "Q", "I", "UP", "FURB", "PL", "SIM", "PERF", "RUF"]
+
+[tool.ruff]
+line-length = 120
