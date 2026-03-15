@@ -8,9 +8,9 @@ from .aws_mock import AwsMock, Key
 
 
 def test_remove_key(
-        key_manager: AwsKeyStore,
-        mocked_key: Key,
-        aws_mock_with_key: AwsMock,
+    key_manager: AwsKeyStore,
+    mocked_key: Key,
+    aws_mock_with_key: AwsMock,
 ) -> None:
     # when
     key_manager.remove_key(mocked_key.id)
@@ -20,9 +20,9 @@ def test_remove_key(
 
 
 def test_remove_key_with_exception(
-        key_manager: AwsKeyStore,
-        mocked_key: Key,
-        aws_mock_with_key: AwsMock,
+    key_manager: AwsKeyStore,
+    mocked_key: Key,
+    aws_mock_with_key: AwsMock,
 ) -> None:
     # given
     aws_mock_with_key.schedule_key_deletion_mock.side_effect = CantDeleteKeyAwsError

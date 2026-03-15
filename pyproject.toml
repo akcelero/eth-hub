@@ -1,7 +1,7 @@
 [project]
 name = "eth-hub"
-dynamic = ["version"]
 description = "Flexible Ethereum key management and signing library supporting local and external backends."
+version = "1.0.1"
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [{ name = "akcelero", email = "akcelero@gmail.com" }]
@@ -19,13 +19,11 @@ dependencies = [
     "asn1crypto~=1.5.1",
 ]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
 
     "Intended Audience :: Developers",
     "Intended Audience :: System Administrators",
     "Topic :: Software Development :: Libraries :: Python Modules",
-
-    "License :: OSI Approved :: MIT License",
 
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.11",
@@ -35,10 +33,10 @@ classifiers = [
 
 [dependency-groups]
 dev = [
-    "mypy>=1.15.0",
     "pytest>=8.3.5",
     "pytest-mock>=3.14.0",
     "ruff>=0.11.11",
+    "ty>=0.0.23"
 ]
 
 [project.urls]
@@ -47,26 +45,8 @@ Repository = "https://github.com/akcelero/eth-hub"
 Issues = "https://github.com/akcelero/eth-hub/issues"
 
 [build-system]
-requires = ["hatchling", "uv-dynamic-versioning"]
-build-backend = "hatchling.build"
-
-[tool.hatch.version]
-source = "uv-dynamic-versioning"
-
-[tool.uv-dynamic-versioning]
-fallback-version = "0.0.0"
-
-[[tool.mypy.overrides]]
-module = "rlp"
-ignore_missing_imports = true
-
-[tool.uv]
-dev-dependencies = [
-    "mypy>=1.15.0",
-    "pytest>=8.3.5",
-    "pytest-mock>=3.14.0",
-    "ruff>=0.11.8",
-]
+requires = ["uv_build >=0.10.9, <0.11.0"]
+build-backend = "uv_build"
 
 [[tool.uv.index]]
 name = "test-pypi"
@@ -79,6 +59,9 @@ name = "pypi"
 url = "https://pypi.org/simple/"
 publish-url = "https://upload.pypi.org/legacy/"
 explicit = true
+
+[tool.ruff]
+line-length = 120
 
 [tool.ruff.lint]
 select = [
@@ -132,6 +115,3 @@ select = [
 "aws_mock.py" = [
     "ARG002"  # Unused method argument
 ]
-
-[tool.ruff]
-line-length = 120

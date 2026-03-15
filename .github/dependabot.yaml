@@ -5,7 +5,7 @@ updates:
     schedule:
       interval: "daily"
     commit-message:
-      prefix: "📦 deps: "
+      prefix: "📦[GH actions] deps: "
     reviewers:
       - "akcelero"
     groups:
@@ -18,7 +18,7 @@ updates:
     schedule:
       interval: "daily"
     commit-message:
-      prefix: "📦 deps: "
+      prefix: "📦[uv] deps: "
     reviewers:
       - "akcelero"
     groups:

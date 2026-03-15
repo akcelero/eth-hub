@@ -15,8 +15,8 @@ def test_set_alias(client: KMSClient, stubber: Stubber) -> None:
         "1a022100a64ba0a49b3ac89eb67ef01fc1c1348bb46ae0b9caa06964b723ac426535f818",
     )
     msg_hash = keccak(b"test value")
-    expected_r = 0xeb6c5e5503afdb89e0580c3aa25069323d8a050a707be5b08d115c084bd9cb1a
-    expected_s = 0xa64ba0a49b3ac89eb67ef01fc1c1348bb46ae0b9caa06964b723ac426535f818
+    expected_r = 0xEB6C5E5503AFDB89E0580C3AA25069323D8A050A707BE5B08D115C084BD9CB1A
+    expected_s = 0xA64BA0A49B3AC89EB67EF01FC1C1348BB46AE0B9CAA06964B723AC426535F818
 
     stubber.add_response(
         method="sign",
