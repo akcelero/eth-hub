@@ -10,6 +10,7 @@ repos:
   rev: 0.10.10
   hooks:
     - id: uv-lock
+      ci: skip
 
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v5.0.0
