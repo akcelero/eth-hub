@@ -41,7 +41,8 @@ def test_get_aliases(client: KMSClient, stubber: Stubber) -> None:
                 {
                     "AliasName": f"alias/{alias1}",
                     "TargetKeyId": str(key_id),
-                }, {
+                },
+                {
                     "AliasName": f"alias/{alias2}",
                     "TargetKeyId": str(key_id),
                 },
@@ -73,7 +74,8 @@ def test_check_alias_already_taken(client: KMSClient, stubber: Stubber) -> None:
                 {
                     "AliasName": f"alias/{alias1}",
                     "TargetKeyId": str(key_id),
-                }, {
+                },
+                {
                     "AliasName": f"alias/{alias2}",
                     "TargetKeyId": str(key_id),
                 },

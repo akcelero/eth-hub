@@ -71,6 +71,7 @@ def test_create_key_item_error(client: KMSClient, stubber: Stubber) -> None:
 
     stubber.assert_no_pending_responses()
 
+
 def test_fulfil_private_key(client: KMSClient, stubber: Stubber) -> None:
     # given
     key_id = uuid.uuid4()
@@ -90,7 +91,7 @@ def test_fulfil_private_key(client: KMSClient, stubber: Stubber) -> None:
     stubber.add_response(
         method="import_key_material",
         service_response={
-        "ResponseMetadata": {
+            "ResponseMetadata": {
                 "HTTPStatusCode": 200,
             },
         },

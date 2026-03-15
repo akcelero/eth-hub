@@ -8,8 +8,8 @@ from .aws_mock import AwsMock
 
 
 def test_create_key(
-        key_manager: AwsKeyStore,
-        aws_mock: AwsMock,
+    key_manager: AwsKeyStore,
+    aws_mock: AwsMock,
 ) -> None:
     # when
     key_manager.create_key()
@@ -20,8 +20,8 @@ def test_create_key(
 
 
 def test_create_key_with_exception(
-        key_manager: AwsKeyStore,
-        aws_mock: AwsMock,
+    key_manager: AwsKeyStore,
+    aws_mock: AwsMock,
 ) -> None:
     # given
     aws_mock.create_key_item_mock.side_effect = CantCreateKeyObjectAwsError
@@ -32,8 +32,8 @@ def test_create_key_with_exception(
 
 
 def test_import_key(
-        key_manager: AwsKeyStore,
-        aws_mock: AwsMock,
+    key_manager: AwsKeyStore,
+    aws_mock: AwsMock,
 ) -> None:
     # given
     pk = bytes.fromhex("b8c0e2a59eb900206b21ad19b632725b0e113fb46cef49ed3d418cba056dbd00")
@@ -47,8 +47,8 @@ def test_import_key(
 
 
 def test_import_key_with_exception_on_key_creation(
-        key_manager: AwsKeyStore,
-        aws_mock: AwsMock,
+    key_manager: AwsKeyStore,
+    aws_mock: AwsMock,
 ) -> None:
     # given
     pk = bytes.fromhex("b8c0e2a59eb900206b21ad19b632725b0e113fb46cef49ed3d418cba056dbd00")
@@ -60,8 +60,8 @@ def test_import_key_with_exception_on_key_creation(
 
 
 def test_import_key_with_exception_on_fulfilling_pk(
-        key_manager: AwsKeyStore,
-        aws_mock: AwsMock,
+    key_manager: AwsKeyStore,
+    aws_mock: AwsMock,
 ) -> None:
     # given
     pk = bytes.fromhex("b8c0e2a59eb900206b21ad19b632725b0e113fb46cef49ed3d418cba056dbd00")
