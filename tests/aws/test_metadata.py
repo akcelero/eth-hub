@@ -8,9 +8,9 @@ from .aws_mock import AwsMock, Key
 
 
 def test_set_alias(
-        mocked_key: Key,
-        key_manager: AwsKeyStore,
-        aws_mock_with_key: AwsMock,
+    mocked_key: Key,
+    key_manager: AwsKeyStore,
+    aws_mock_with_key: AwsMock,
 ) -> None:
     # given
     alias = "test"
@@ -25,8 +25,8 @@ def test_set_alias(
 
 @pytest.mark.usefixtures("aws_mock_with_key")
 def test_set_already_taken_alias(
-        mocked_key: Key,
-        key_manager: AwsKeyStore,
+    mocked_key: Key,
+    key_manager: AwsKeyStore,
 ) -> None:
     # given
     alias = "test"
@@ -38,9 +38,9 @@ def test_set_already_taken_alias(
 
 
 def test_set_alias_with_exception(
-        mocked_key: Key,
-        key_manager: AwsKeyStore,
-        aws_mock_with_key: AwsMock,
+    mocked_key: Key,
+    key_manager: AwsKeyStore,
+    aws_mock_with_key: AwsMock,
 ) -> None:
     # given
     alias = "test"

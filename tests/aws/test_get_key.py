@@ -13,9 +13,9 @@ from .aws_mock import AwsMock, Key
 
 
 def test_get_key(
-        mocked_key: Key,
-        key_manager: AwsKeyStore,
-        aws_mock_with_key: AwsMock,
+    mocked_key: Key,
+    key_manager: AwsKeyStore,
+    aws_mock_with_key: AwsMock,
 ) -> None:
     # when
     key_manager.get_key(mocked_key.id)
@@ -28,9 +28,9 @@ def test_get_key(
 
 
 def test_get_key_with_exception_on_getting_metadata(
-        mocked_key: Key,
-        key_manager: AwsKeyStore,
-        aws_mock_with_key: AwsMock,
+    mocked_key: Key,
+    key_manager: AwsKeyStore,
+    aws_mock_with_key: AwsMock,
 ) -> None:
     # given
     aws_mock_with_key.get_key_metadata_mock.side_effect = CantCreateKeyObjectAwsError
@@ -41,9 +41,9 @@ def test_get_key_with_exception_on_getting_metadata(
 
 
 def test_get_key_with_exception_on_getting_aliases(
-        mocked_key: Key,
-        key_manager: AwsKeyStore,
-        aws_mock_with_key: AwsMock,
+    mocked_key: Key,
+    key_manager: AwsKeyStore,
+    aws_mock_with_key: AwsMock,
 ) -> None:
     # given
     aws_mock_with_key.get_aliases_mock.side_effect = CantListAliasesAwsError
@@ -54,9 +54,9 @@ def test_get_key_with_exception_on_getting_aliases(
 
 
 def test_get_key_with_exception_on_getting_addresses(
-        mocked_key: Key,
-        key_manager: AwsKeyStore,
-        aws_mock_with_key: AwsMock,
+    mocked_key: Key,
+    key_manager: AwsKeyStore,
+    aws_mock_with_key: AwsMock,
 ) -> None:
     # given
     aws_mock_with_key.get_address_mock.side_effect = CantGetAddressAwsError
@@ -67,8 +67,8 @@ def test_get_key_with_exception_on_getting_addresses(
 
 
 def test_list_keys(
-        key_manager: AwsKeyStore,
-        aws_mock_with_key: AwsMock,
+    key_manager: AwsKeyStore,
+    aws_mock_with_key: AwsMock,
 ) -> None:
     # when
     keys = key_manager.list_keys()
@@ -82,8 +82,8 @@ def test_list_keys(
 
 
 def test_list_keys_with_exception_on_getting_ids(
-        key_manager: AwsKeyStore,
-        aws_mock_with_key: AwsMock,
+    key_manager: AwsKeyStore,
+    aws_mock_with_key: AwsMock,
 ) -> None:
     # given
     aws_mock_with_key.get_key_ids_mock.side_effect = CantListKeysAwsError

@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from asn1crypto.algos import DSASignature  # type: ignore
+from asn1crypto.algos import DSASignature
 from botocore.exceptions import ClientError
 from mypy_boto3_kms import KMSClient
 

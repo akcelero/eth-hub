@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from pydantic import Field
 
 from eth_hub.base_key import BaseKey
