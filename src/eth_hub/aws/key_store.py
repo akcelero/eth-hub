@@ -112,8 +112,8 @@ class AwsKeyStore(BaseKeyStore):
         except BaseAwsError as error:
             raise CantSignHashError(error)
 
-        r: int = dsa_signature["r"].native  # type: ignore
-        s: int = dsa_signature["s"].native  # type: ignore
+        r: int = dsa_signature["r"].native
+        s: int = dsa_signature["s"].native
 
         if s > SECP256K1_ORDER // 2:
             s = SECP256K1_ORDER - s
