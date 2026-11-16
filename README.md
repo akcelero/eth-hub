@@ -31,7 +31,7 @@ A secure abstraction layer for managing Ethereum keys across different storage b
 from eth_hub import (
     BaseKeyStore,  # Abstract base class
     AwsKeyStore,  # AWS KMS implementation
-    LocalKeyStore  # In-memory implementation
+    LocalKeyStore,  # In-memory implementation
 )
 ```
 
